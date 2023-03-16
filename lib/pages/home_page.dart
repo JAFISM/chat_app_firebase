@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               onTap: (){
-                nextScreen(context, ProfilePage());
+                nextScreenReplace(context, ProfilePage(userName: userName,email: email,));
               },
               selectedColor: Theme.of(context).primaryColor,
               selected: true,
@@ -91,7 +91,11 @@ class _HomePageState extends State<HomePage> {
                       IconButton(onPressed: (){
                         Navigator.pop(context);
                       }, icon: Icon(Icons.cancel,color: Colors.red,)),
-                      IconButton(onPressed: (){}, icon: Icon(Icons.done,color: Colors.green,))
+                      IconButton(onPressed: () async{
+                        await authService.signOut();
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_)=>LoginPage()),
+                            (route)=>false);
+                      }, icon: Icon(Icons.done,color: Colors.green,))
                     ],
                   );
                 });
