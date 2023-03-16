@@ -1,9 +1,15 @@
 import 'package:chat_app_firebase/pages/auth/register_page.dart';
+import 'package:chat_app_firebase/service/auth_service.dart';
+import 'package:chat_app_firebase/service/database_service.dart';
 import 'package:chat_app_firebase/shared/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '../../helper/helper_function.dart';
 import '../../widget/widgets.dart';
+import '../home_page.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -15,13 +21,15 @@ class _LoginPageState extends State<LoginPage> {
   final formKey=GlobalKey<FormState>();
   String email='';
   String password='';
+  bool _isLoading=false;
+  AuthService authService=AuthService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(
       //  backgroundColor: Theme.of(context).primaryColor,
       // ),
-      body:
+      body:_isLoading? Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor,),):
       SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 100),
@@ -114,7 +122,29 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-   login() {
-    if(formKey.currentState!.validate()){}
+   login() async{
+     if (formKey.currentState!.validate()) {
+       setState(() {
+         _isLoading = true;
+       });
+       await authService
+           .loginWithUsernameandPassword( email, password)
+           .then((value) async{
+         if(value == true) {
+      QuerySnapshot snapshot=await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).gettingUserData(email);
+      //saving the value to our shared preference
+      await HelperFunctions.saveUserLoggedInStatus(true);
+      await HelperFunctions.saveUserEmailSF(email);
+      await HelperFunctions.saveUserNameSF(snapshot.docs[0]['fullName']);
+           nextScreenReplace(context, const HomePage());
+         }
+         else{
+           showSnackbar(context, Colors.red, value);
+           setState(() {
+             _isLoading=false;
+           });
+         }
+       } );
+     }
    }
 }
