@@ -2,6 +2,7 @@ import 'package:chat_app_firebase/helper/helper_function.dart';
 import 'package:chat_app_firebase/pages/auth/login_page.dart';
 import 'package:chat_app_firebase/pages/home_page.dart';
 import 'package:chat_app_firebase/shared/constants.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,16 @@ void main() async{
     // run the initialization for the android , ios
     await Firebase.initializeApp();
   }
+  await FirebaseAppCheck.instance.activate(
+    webRecaptchaSiteKey: 'recaptcha-v3-site-key',
+    // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
+    // your preferred provider. Choose from:
+    // 1. debug provider
+    // 2. safety net provider
+    // 3. play integrity provider
+    androidProvider: AndroidProvider.debug,
+  );
+
   runApp( MyApp());
 }
 
