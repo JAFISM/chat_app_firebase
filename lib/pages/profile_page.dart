@@ -23,11 +23,6 @@ class _ProfilePageState extends State<ProfilePage> {
         centerTitle: true,
         elevation: 0,
         title: Text("Pofile",style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold),),
-        // actions: [
-        //   IconButton(onPressed: (){
-        //     nextScreenReplace(context, SearchPage());
-        //   }, icon: Icon(Icons.search))
-        // ],
       ),
       drawer: Drawer(
         backgroundColor: Color(0xffECF2FF),
@@ -43,20 +38,18 @@ class _ProfilePageState extends State<ProfilePage> {
               onTap: (){
                 nextScreen(context, HomePage());
               },
-              selectedColor: Theme.of(context).primaryColor,
-              selected: true,
+              // selectedColor: Theme.of(context).primaryColor,
+              // selected: true,
               contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
               leading: Icon(Icons.group),
               title: Text("Groups"),
             ),
             ListTile(
-              onTap: (){
-                nextScreenReplace(context, HomePage());
-              },
+              onTap: (){},
               selected: true,
               selectedColor: Theme.of(context).primaryColor,
               contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-              leading: Icon(Icons.group),
+              leading: Icon(Icons.person),
               title: Text("Profile"),
             ),
             ListTile(
@@ -79,12 +72,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   );
                 });
-                authService.signOut().whenComplete(() {
-                  nextScreenReplace(context, LoginPage());
-                });
               },
-              selectedColor: Theme.of(context).primaryColor,
-              selected: true,
+              // selectedColor: Theme.of(context).primaryColor,
+              // selected: true,
               contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
               leading: Icon(Icons.logout),
               title: Text("Logout"),
@@ -92,9 +82,38 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
-      body: Center(
-        child: Text("profilepage"),
-      ),
+      body: Container(
+       // padding: EdgeInsets.symmetric(horizontal: 90,vertical: 170),
+        child: Column(
+          children: [
+            Center(child: Icon(Icons.account_circle,size: 200,color: Colors.grey[900],)),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Full Name",style: TextStyle(fontSize: 17),),
+                      Text(widget.userName,style: TextStyle(fontSize: 17),)
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Email",style: TextStyle(fontSize: 17),),
+                      Text(widget.email,style: TextStyle(fontSize: 17),)
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      )
     );
   }
 }

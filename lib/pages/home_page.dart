@@ -3,7 +3,9 @@ import 'package:chat_app_firebase/pages/auth/login_page.dart';
 import 'package:chat_app_firebase/pages/profile_page.dart';
 import 'package:chat_app_firebase/pages/serach_page.dart';
 import 'package:chat_app_firebase/service/auth_service.dart';
+import 'package:chat_app_firebase/service/database_service.dart';
 import 'package:chat_app_firebase/widget/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,6 +19,9 @@ class _HomePageState extends State<HomePage> {
   AuthService authService =AuthService();
   String userName="";
   String email="";
+  Stream? groups;
+  bool _isLoading= false;
+  String groupName='';
 
   @override
   void initState() {
@@ -33,6 +38,12 @@ class _HomePageState extends State<HomePage> {
     await HelperFunctions.getUserNameFromSF().then((val) {
       setState(() {
         userName=val!;
+      });
+    });
+    // getting the list of in our stream
+    await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).getUserGroups().then((snapshot){
+      setState(() {
+        groups=snapshot;
       });
     });
   }
@@ -73,10 +84,10 @@ class _HomePageState extends State<HomePage> {
               onTap: (){
                 nextScreenReplace(context, ProfilePage(userName: userName,email: email,));
               },
-              selectedColor: Theme.of(context).primaryColor,
-              selected: true,
+              // selectedColor: Theme.of(context).primaryColor,
+              // selected: true,
               contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-              leading: Icon(Icons.group),
+              leading: Icon(Icons.person),
               title: Text("Profile"),
             ),
             ListTile(
@@ -99,18 +110,133 @@ class _HomePageState extends State<HomePage> {
                     ],
                   );
                 });
-                authService.signOut().whenComplete(() {
-                  nextScreenReplace(context, LoginPage());
-                });
               },
-              selectedColor: Theme.of(context).primaryColor,
-              selected: true,
+              // selectedColor: Theme.of(context).primaryColor,
+              // selected: true,
               contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
               leading: Icon(Icons.logout),
               title: Text("Logout"),
             ),
           ],
         ),
+      ),
+      body: groupList(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+          popUpDialog(context);
+        },
+        elevation: 0,
+        backgroundColor: Theme.of(context).primaryColor,
+        child: Icon(
+          Icons.add,size: 30,
+        ),
+      ),
+    );
+  }
+
+  groupList() {
+    return StreamBuilder(
+      stream: groups,
+      builder: (context, AsyncSnapshot snapshot){
+        //make some checks
+        if(snapshot.hasData){
+          if(snapshot.data['groups']!= null){
+            if(snapshot.data['groups'].length!=0){
+              return Text("Helooo");
+            }else{
+              return noGroupWidget();
+            }
+          }else{
+            return noGroupWidget();
+          }
+
+        }else{
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ),
+          );
+        }
+      }
+    );
+  }
+  popUpDialog(BuildContext context) {
+    showDialog(
+      barrierDismissible: false,
+        context: context, builder: (context){
+      return AlertDialog(
+        backgroundColor: Color(0xffECF2FF),
+        title: Text("Create a group",textAlign: TextAlign.left,),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _isLoading == true ? Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor,),)
+                :TextField(
+              onChanged: (val){
+                setState(() {
+                  groupName=val;
+                });
+              },
+              style: TextStyle(color: Colors.black),
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).primaryColor
+                  ),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+                  errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.red
+                      ),
+                      borderRadius: BorderRadius.circular(20)
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Theme.of(context).primaryColor
+                      ),
+                      borderRadius: BorderRadius.circular(20)
+                  )
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          ElevatedButton(onPressed: (){
+            Navigator.of(context).pop();
+          }, child: Text("Cancel"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).primaryColor
+            ),
+          ),
+          ElevatedButton(onPressed: () async{
+
+          }, child: Text("Create"),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor
+            ),
+          ),
+        ],
+      );
+    }
+    );
+  }
+
+  noGroupWidget() {
+    return Container(
+      padding:  EdgeInsets.symmetric(horizontal: 25),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: (){
+              popUpDialog(context);
+            },
+              child: Icon(Icons.add_circle,color: Colors.grey[700],size: 75,)),
+          SizedBox(height: 20,),
+          Text("You've not joined any groups, tap on th add icon to create a group or also search from top search buton",textAlign: TextAlign.center,)
+        ],
       ),
     );
   }
