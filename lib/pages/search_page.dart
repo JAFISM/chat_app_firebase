@@ -1,5 +1,8 @@
 import 'package:chat_app_firebase/helper/helper_function.dart';
+import 'package:chat_app_firebase/pages/chat_page.dart';
 import 'package:chat_app_firebase/service/database_service.dart';
+import 'package:chat_app_firebase/shared/constants.dart';
+import 'package:chat_app_firebase/widget/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +19,7 @@ class _SearchPageState extends State<SearchPage> {
   bool isLoading =false;
   QuerySnapshot ? searchSnapshot;
   bool hasUserSearched=false;
+  bool isJoined=false;
   String userName="";
   User? user;
 
@@ -30,7 +34,13 @@ class _SearchPageState extends State<SearchPage> {
         userName =value!;
       });
     });
-    User? user= FirebaseAuth.instance.currentUser;
+    user= FirebaseAuth.instance.currentUser;
+  }
+  String getName(String r){
+    return r.substring(r.indexOf("_")+ 1 );
+  }
+  String getId(String res){
+    return res.substring(0,res.indexOf("_"));
   }
 
   @override
@@ -93,7 +103,8 @@ class _SearchPageState extends State<SearchPage> {
       await DatabaseService().searchByName(_searchController.text).then((snapshot){
         setState(() {
           searchSnapshot=snapshot;
-          isLoading=true;
+          isLoading=false;
+          hasUserSearched=true;
         });
       });
     }
@@ -112,8 +123,64 @@ class _SearchPageState extends State<SearchPage> {
         })
         :Container();
   }
+  joinedOrNot(String userName,String groupId ,String groupName,String admin)async{
+    await DatabaseService(uid: user!.uid).isUserJoined(groupName, groupId,userName)
+        .then((value){
+          setState(() {
+            isJoined=value;
+          });
+    });
+
+  }
   Widget groupTile(String userName,String groupId,String groupName,String admin){
-    return Text("Hello");
+    // function to check whether user already exist in groups
+    joinedOrNot(userName,groupId,groupName,admin);
+    return ListTile(
+      contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+      leading: CircleAvatar(
+        radius: 30,
+        backgroundColor: Theme.of(context).primaryColor,
+        child: Text(groupName.substring(0,1).toUpperCase(),style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+      ),
+      title: Text(groupName,style: TextStyle(fontWeight: FontWeight.w600),),
+      subtitle: Text("Admin : ${getName(admin)}"),
+      trailing: InkWell(
+        onTap: ()async{
+          await DatabaseService(uid: user!.uid).toggleGroupJoin(groupId, userName, groupName);
+          if(isJoined){
+            setState(() {
+              isJoined =!isJoined;
+            });
+            showSnackbar(context, Color(0xff655DBB), "Successfully joined the group");
+            Future.delayed(Duration(seconds: 2),(){
+              nextScreen(context, ChatPage(groupId: groupId, groupName: groupName, userName: userName));
+            });
+          }else{
+            setState(() {
+              isJoined =!isJoined;
+            });
+            showSnackbar(context, Colors.red, "Left the group $groupName");
+          }
+        },
+        child: isJoined? Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Constants.c2,
+            border: Border.all(color: Colors.white,width: 1)
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+          child: Text("Joined",style: TextStyle(color: Colors.white),),
+        )
+            :Container(
+          decoration:  BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Theme.of(context).primaryColor
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+          child:  Text("Join",style: TextStyle(color: Colors.white),)
+        ),
+      ),
+    );
   }
 
 }

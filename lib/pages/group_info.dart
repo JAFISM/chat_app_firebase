@@ -1,4 +1,6 @@
+import 'package:chat_app_firebase/pages/home_page.dart';
 import 'package:chat_app_firebase/service/database_service.dart';
+import 'package:chat_app_firebase/widget/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 class GroupInfo extends StatefulWidget {
@@ -45,7 +47,29 @@ class _GroupInfoState extends State<GroupInfo> {
         backgroundColor: Theme.of(context).primaryColor,
         title: Text("Group Info"),
         actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.exit_to_app))
+          IconButton(onPressed: (){
+            showDialog(
+                barrierDismissible: false,
+                context: context, builder: (context){
+              return AlertDialog(
+                title: const Text("Exit"),
+                content: const Text("Are you sure you exit the group ?"),
+                actions: [
+                  IconButton(onPressed: (){
+                    Navigator.pop(context);
+                  }, icon: Icon(Icons.cancel,color: Colors.red,)),
+                  IconButton(onPressed: () async{
+                    DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).toggleGroupJoin(
+                        widget.groupId,
+                        getName(widget.adminName),
+                        widget.groupName).whenComplete((){
+                          nextScreenReplace(context, const HomePage());
+                    });
+                  }, icon: Icon(Icons.done,color: Colors.green,))
+                ],
+              );
+            });
+          }, icon: Icon(Icons.exit_to_app))
         ],
       ),
       body: Container(
