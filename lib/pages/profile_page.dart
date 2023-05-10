@@ -29,7 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: ListView(
           padding: EdgeInsets.symmetric(vertical: 50),
           children: [
-            Icon(Icons.account_circle,size: 150,color: Colors.grey[800],),
+            Icon(Icons.account_circle,size: 150,color: Theme.of(context).primaryColor,),
             SizedBox(height: 15,),
             Text(widget.userName,textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),),
             SizedBox(height: 30,),
@@ -49,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
               selected: true,
               selectedColor: Theme.of(context).primaryColor,
               contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-              leading: Icon(Icons.person),
+              leading: Icon(Icons.person,),
               title: Text("Profile"),
             ),
             ListTile(
@@ -82,34 +82,72 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
-      body: Container(
-       // padding: EdgeInsets.symmetric(horizontal: 90,vertical: 170),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 20,right: 20),
         child: Column(
           children: [
-            Center(child: Icon(Icons.account_circle,size: 200,color: Colors.grey[900],)),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Full Name",style: TextStyle(fontSize: 17),),
-                      Text(widget.userName,style: TextStyle(fontSize: 17),)
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Email",style: TextStyle(fontSize: 17),),
-                      Text(widget.email,style: TextStyle(fontSize: 17),)
-                    ],
-                  )
-                ],
+            Center(child: Icon(Icons.account_circle,size: 200,color: Theme.of(context).primaryColor,)),
+            // Padding(
+            //   padding: const EdgeInsets.all(20.0),
+            //   child: Column(
+            //     children: [
+            //       Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //         children: [
+            //           Text("Name",style: TextStyle(fontSize: 17),),
+            //           Text(widget.userName,style: TextStyle(fontSize: 17),)
+            //         ],
+            //       ),
+            //       SizedBox(
+            //         height: 15,
+            //       ),
+            //       Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //         children: [
+            //           Text("Email",style: TextStyle(fontSize: 17),),
+            //           Text(widget.email,style: TextStyle(fontSize: 17),)
+            //         ],
+            //       )
+            //     ],
+            //   ),
+            // ),
+            // Container(
+            //   height: 60,
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(15),
+            //     color: Theme.of(context).primaryColor
+            //   ),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //     children: [
+            //       Text("Name",style: TextStyle(fontSize: 17,color: Colors.white),),
+            //       SizedBox(width: 50,),
+            //       Text(widget.userName,style: TextStyle(fontSize: 17,color: Colors.white),),
+            //     ],
+            //   ),
+            // ),
+            // SizedBox(
+            //   height: 10,
+            // ),
+            ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
               ),
+              tileColor: Theme.of(context).primaryColor,
+              leading: Text("Name",style: TextStyle(fontSize: 17,color: Colors.white),),
+              trailing: Text(widget.userName,style: TextStyle(fontSize: 17,color: Colors.white) ,),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            ListTile(
+             // hoverColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              tileColor: Theme.of(context).primaryColor,
+              leading: Text("Email",style: TextStyle(fontSize: 17,color: Colors.white),),
+              trailing: Text(widget.email,style: TextStyle(fontSize: 17,color: Colors.white),)
             ),
           ],
         ),

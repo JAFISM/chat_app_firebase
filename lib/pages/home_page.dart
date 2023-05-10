@@ -68,26 +68,26 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(onPressed: (){
             nextScreen(context, SearchPage());
-          }, icon: Icon(Icons.search))
+          }, icon: const Icon(Icons.search))
         ],
       ),
       drawer: Drawer(
         backgroundColor: Color(0xffECF2FF),
         child: ListView(
-          padding: EdgeInsets.symmetric(vertical: 50),
+          padding: const EdgeInsets.symmetric(vertical: 50),
           children: [
-            Icon(Icons.account_circle,size: 150,color: Colors.grey[800],),
-            SizedBox(height: 15,),
-            Text(userName,textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),),
-            SizedBox(height: 30,),
-            Divider(height: 2,),
+            Icon(Icons.account_circle,size: 150,color: Theme.of(context).primaryColor,),
+            const SizedBox(height: 15,),
+            Text(userName,textAlign: TextAlign.center,style: const TextStyle(fontWeight: FontWeight.bold),),
+            const SizedBox(height: 30,),
+            const Divider(height: 2,),
             ListTile(
               onTap: (){},
               selectedColor: Theme.of(context).primaryColor,
               selected: true,
-              contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-              leading: Icon(Icons.group),
-              title: Text("Groups"),
+              contentPadding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+              leading: const Icon(Icons.group),
+              title: const Text("Groups"),
             ),
             ListTile(
               onTap: (){
@@ -95,9 +95,9 @@ class _HomePageState extends State<HomePage> {
               },
               // selectedColor: Theme.of(context).primaryColor,
               // selected: true,
-              contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-              leading: Icon(Icons.person),
-              title: Text("Profile"),
+              contentPadding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+              leading: const Icon(Icons.person),
+              title: const Text("Profile"),
             ),
             ListTile(
               onTap: ()async{
@@ -105,38 +105,39 @@ class _HomePageState extends State<HomePage> {
                   barrierDismissible: false,
                     context: context, builder: (context){
                   return AlertDialog(
-                    title: Text("Logout"),
-                    content: Text("Are you sure you want to logout?"),
+                    title: const Text("Logout"),
+                    content: const Text("Are you sure you want to logout?"),
                     actions: [
                       IconButton(onPressed: (){
                         Navigator.pop(context);
-                      }, icon: Icon(Icons.cancel,color: Colors.red,)),
+                      }, icon: const Icon(Icons.cancel,color: Colors.red,)),
                       IconButton(onPressed: () async{
                         await authService.signOut();
                         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_)=>LoginPage()),
                             (route)=>false);
-                      }, icon: Icon(Icons.done,color: Colors.green,))
+                      }, icon: const Icon(Icons.done,color: Colors.green,))
                     ],
                   );
                 });
               },
               // selectedColor: Theme.of(context).primaryColor,
               // selected: true,
-              contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-              leading: Icon(Icons.logout),
-              title: Text("Logout"),
+              contentPadding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+              leading: const Icon(Icons.logout),
+              title: const Text("Logout"),
             ),
           ],
         ),
       ),
       body: groupList(),
       floatingActionButton: FloatingActionButton(
+        mini: true,
         onPressed: (){
           popUpDialog(context);
         },
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
-        child: Icon(
+        child: const Icon(
           Icons.add,size: 30,
         ),
       ),
@@ -214,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.circular(20)
                       ),
                       errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                               color: Colors.red
                           ),
                           borderRadius: BorderRadius.circular(20)
@@ -271,7 +272,7 @@ class _HomePageState extends State<HomePage> {
 
   noGroupWidget() {
     return Container(
-      padding:  EdgeInsets.symmetric(horizontal: 25),
+      padding:  const EdgeInsets.symmetric(horizontal: 25),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -281,8 +282,8 @@ class _HomePageState extends State<HomePage> {
               popUpDialog(context);
             },
               child: Icon(Icons.add_circle,color: Colors.grey[700],size: 75,)),
-          SizedBox(height: 20,),
-          Text("You've not joined any groups, tap on th add icon to create a group or also search from top search buton",textAlign: TextAlign.center,)
+          const SizedBox(height: 20,),
+          const Text("You've not joined any groups, tap on th add icon to create a group or also search from top search buton",textAlign: TextAlign.center,)
         ],
       ),
     );

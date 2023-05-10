@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+//import 'package:firebase_core/firebase_core.dart';
 
 class DatabaseService{
   final String ? uid;
@@ -55,7 +55,7 @@ Future savingUserData(String fullName,String email)async {
       .collection("messages")
       .orderBy("time").snapshots();
    }
- Future  getGroupAdmin(String groupId) async {
+ Future getGroupAdmin(String groupId) async {
     DocumentReference d = groupCollection.doc(groupId);
     DocumentSnapshot documentSnapshot = await d.get();
     return documentSnapshot['admin'];

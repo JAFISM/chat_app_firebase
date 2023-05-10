@@ -22,7 +22,7 @@ void main() async{
     // run the initialization for the android , ios
     await Firebase.initializeApp();
   }
-  runApp( MyApp());
+  runApp( const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -34,7 +34,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  bool _isSgnedIn = false;
+  bool _isSignedIn = false;
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
     await HelperFunctions.getUserLoggedInStatus().then((value) {
       if(value!=null){
         setState(() {
-          _isSgnedIn =value;
+          _isSignedIn =value;
         });
       }
     });
@@ -55,11 +55,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primaryColor: Color(0xff3E54AC),
-        scaffoldBackgroundColor: Color(0xffECF2FF),
+        primaryColor: const Color(0xff3E54AC),
+        scaffoldBackgroundColor: const Color(0xffECF2FF),
       ),
       debugShowCheckedModeBanner: false,
-      home:_isSgnedIn?  const HomePage() : const LoginPage(),
+      home:_isSignedIn?  const HomePage() : const LoginPage(),
     );
   }
 }

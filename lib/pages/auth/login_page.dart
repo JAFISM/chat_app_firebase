@@ -26,20 +26,17 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //  backgroundColor: Theme.of(context).primaryColor,
-      // ),
       body:_isLoading? Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor,),):
       SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 100),
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 15,vertical: 100),
           child: Form(
             key:formKey,
             child: Column(
-             mainAxisAlignment: MainAxisAlignment.center,
+             mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                  Text("Rho-Voiceless!",style: TextStyle(color:Constants.c1,fontSize: 40,fontWeight: FontWeight.bold),),
-                 Text("Login now to see what they they are talking ",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                 Text("Login now to see what they are talking ",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
                  Image.asset("assets/grp_chat_img.png",),
                  TextFormField(
                    decoration: textInputDecoration.copyWith(
@@ -59,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
                          : "Please enter a valid email";
                    }
                  ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 TextFormField(
@@ -82,8 +79,9 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   },
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 SizedBox(
+                  height: 45,
                   width: double.infinity,
                   child: ElevatedButton(onPressed: (){
                     login();
@@ -100,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                 Text.rich(
                     TextSpan(
                         text:
-                        "Dont have an account ?",style: TextStyle(color: Colors.black,fontSize: 14),
+                        "Don't have an account ?",style: TextStyle(color: Colors.black,fontSize: 14),
                       children: <TextSpan>[
                         TextSpan(
                           text: "Register here",
